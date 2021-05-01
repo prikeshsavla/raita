@@ -6,5 +6,6 @@ import vue from "@vitejs/plugin-vue";
  */
 export default {
   plugins: [vue()],
-  build: { outDir: "docs" },
+  base: '/docs/',
+  build: { outDir: "docs", assetsDir: "assets" },
 };
