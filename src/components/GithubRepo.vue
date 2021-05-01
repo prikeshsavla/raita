@@ -81,7 +81,7 @@ export default {
   async mounted() {
     const apiUrl = this.url.replace(
       "https://github.com/",
-      "http://api.github.com/repos/"
+      "https://api.allorigins.win/raw?url=http://api.github.com/repos/"
     );
     this.repository = await fetch(apiUrl).then((r) => r.json());
   },
