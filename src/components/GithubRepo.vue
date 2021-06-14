@@ -1,6 +1,17 @@
 <template>
   <div
-    class="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4 mb-3"
+    class="
+      p-6
+      max-w-lg
+      mx-auto
+      bg-white
+      rounded-xl
+      shadow-md
+      flex
+      items-center
+      space-x-4
+      mb-3
+    "
   >
     <div class="flex-shrink-0">
       <svg
@@ -18,43 +29,50 @@
       </svg>
     </div>
     <div>
-      <div v-if="repository && Object.keys(repository).length > 0">
+      <div
+        v-if="repository && Object.keys(repository).length > 0"
+        contenteditable="true"
+        class="max-w-xs"
+      >
         <h4>
-          <a
-            class="font-bold underline"
-            target="_blank"
-            :href="repository.owner.html_url"
-            >{{ repository.owner.login }}</a
-          >
-          /
           <a
             class="font-bold underline"
             target="_blank"
             :href="repository.html_url"
             >{{ repository.name }}</a
           >
+          by
+          <a class="underline" target="_blank" :href="ownerURL"
+            >@{{ ownerLabel }}</a
+          >
         </h4>
         <p>
           {{ repository.description }}
+        </p>
+
+        <p>
+          💻: {{ repository.language }}
+          <br />
+          ⭐ {{ repository.stargazers_count }} 👀
+          {{ repository.subscribers_count }} 🍴 {{ repository.forks }} 🚧
+          <a class="underline" target="_blank" :href="url + '/issues'">{{
+            repository.open_issues
+          }}</a>
         </p>
         <p>
           <a
             class="italic underline"
             target="_blank"
             :href="repository.homepage"
-            >{{ getUrl(repository.homepage) }}</a
+            >Read More >>>
+          </a>
+          <br /><br />
+          <a
+            class="italic underline"
+            target="_blank"
+            :href="repository.html_url"
+            >{{ repository.html_url }}</a
           >
-        </p>
-
-        <p>💻: {{ repository.language }}</p>
-
-        <p>
-          ⭐ {{ repository.stargazers_count }} 👀
-          {{ repository.subscribers_count }} 🍴 {{ repository.forks }} 💬
-          <a class="underline" target="_blank" :href="url + '/issues'">{{
-            repository.open_issues
-          }}</a>
-          📆 {{ formatDate(repository.updated_at) }}
         </p>
       </div>
     </div>
@@ -66,6 +84,8 @@ export default {
   data() {
     return {
       repository: {},
+      owner: {},
+      social: false,
     };
   },
   props: {
@@ -79,11 +99,14 @@ export default {
     },
   },
   async mounted() {
-    const apiUrl = this.url.replace(
+    const apiURL = this.url.replace(
       "https://github.com/",
       "https://api.allorigins.win/raw?url=http://api.github.com/repos/"
     );
-    this.repository = await fetch(apiUrl).then((r) => r.json());
+    this.repository = await fetch(apiURL).then((r) => r.json());
+
+    const ownerURL = `${this.repository.owner.url}`;
+    this.owner = await fetch(ownerURL).then((r) => r.json());
   },
   methods: {
     getUrl(url) {
@@ -97,6 +120,22 @@ export default {
     formatDate(dateString) {
       const dateObj = new Date(dateString);
       return dateObj.toDateString().substring(4, dateObj.toDateString().length);
+    },
+  },
+  computed: {
+    ownerURL() {
+      if (!!this.owner.twitter_username) {
+        return `https://twitter.com/${this.owner.twitter_username}`;
+      } else if (!!this.owner.blog) {
+        return this.owner.blog;
+      }
+
+      return this.owner.html_url;
+    },
+    ownerLabel() {
+      return !!this.owner.twitter_username
+        ? this.owner.twitter_username
+        : this.owner.login;
     },
   },
 };
