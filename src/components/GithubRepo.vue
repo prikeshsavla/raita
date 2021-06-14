@@ -42,9 +42,9 @@
             >{{ repository.name }}</a
           >
           by
-          <a class="underline" target="_blank" :href="ownerURL"
-            >@{{ ownerLabel }}</a
-          >
+          <a class="underline" target="_blank" :href="ownerURL">{{
+            ownerLabel
+          }}</a>
         </h4>
         <p>
           {{ repository.description }}
@@ -134,7 +134,7 @@ export default {
     },
     ownerLabel() {
       return !!this.owner.twitter_username
-        ? this.owner.twitter_username
+        ? "@" + this.owner.twitter_username
         : this.owner.login;
     },
   },
