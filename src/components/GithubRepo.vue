@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="repository && Object.keys(repository).length > 0"
     class="
       p-6
       max-w-lg
@@ -29,11 +30,8 @@
       </svg>
     </div>
     <div>
-      <div
-        v-if="repository && Object.keys(repository).length > 0"
-        contenteditable="true"
-        class="max-w-xs"
-      >
+      <div contenteditable="true" class="max-w-xs" :id="repository.id">
+        <template v-if="tweetView"> <br /><br /> </template>
         <h4>
           <a
             class="font-bold underline"
@@ -53,26 +51,31 @@
         <p>
           💻: {{ repository.language }}
           <br />
-          ⭐ {{ repository.stargazers_count }} 👀
-          {{ repository.subscribers_count }} 🍴 {{ repository.forks }} 🚧
+          ⭐ {{ makeNumberString(repository.stargazers_count) }} 👀
+          {{ makeNumberString(repository.subscribers_count) }} 🍴 {{ makeNumberString(repository.forks) }} 🚧
           <a class="underline" target="_blank" :href="url + '/issues'">{{
-            repository.open_issues
+            makeNumberString(repository.open_issues)
           }}</a>
         </p>
         <p>
-          <a
-            class="italic underline"
-            target="_blank"
-            :href="repository.homepage"
-            >Read More >>>
-          </a>
-          <br /><br />
-          <a
-            class="italic underline"
-            target="_blank"
-            :href="repository.html_url"
-            >{{ repository.html_url }}</a
-          >
+          <template v-if="tweetView">
+            #opensource #{{ repository.language }}
+            <br />
+            <a
+              class="italic underline"
+              target="_blank"
+              :href="repository.html_url"
+              >{{ repository.html_url }}</a
+            >
+          </template>
+          <template v-else>
+            <a
+              class="italic underline"
+              target="_blank"
+              :href="repository.homepage"
+              >Read More >>>
+            </a>
+          </template>
         </p>
       </div>
     </div>
@@ -97,6 +100,10 @@ export default {
       type: String,
       required: true,
     },
+    tweetView: {
+      type: Boolean,
+      default: false,
+    },
   },
   async mounted() {
     const apiURL = this.url.replace(
@@ -120,6 +127,45 @@ export default {
     formatDate(dateString) {
       const dateObj = new Date(dateString);
       return dateObj.toDateString().substring(4, dateObj.toDateString().length);
+    },
+    makeNumberString(number) {
+      var orig = number;
+      var decPlaces = 1;
+    var dec = decPlaces;
+    // 2 decimal places => 100, 3 => 1000, etc
+    decPlaces = Math.pow(10, decPlaces);
+
+    // Enumerate number abbreviations
+    var abbrev = ["k", "m", "b", "t"];
+
+    // Go through the array backwards, so we do the largest first
+    for (var i = abbrev.length - 1; i >= 0; i--) {
+
+        // Convert array index to "1000", "1000000", etc
+        var size = Math.pow(10, (i + 1) * 3);
+
+        // If the number is bigger or equal do the abbreviation
+        if (size <= number) {
+            // Here, we multiply by decPlaces, round, and then divide by decPlaces.
+            // This gives us nice rounding to a particular decimal place.
+            var number = Math.round(number * decPlaces / size) / decPlaces;
+
+            // Handle special case where we round up to the next abbreviation
+            if((number == 1000) && (i < abbrev.length - 1)) {
+                number = 1;
+                i++;
+            }
+
+            // console.log(number);
+            // Add the letter for the abbreviation
+            number += abbrev[i];
+
+            // We are done... stop
+            break;
+        }
+    }
+
+    return number;
     },
   },
   computed: {
