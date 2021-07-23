@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import {is} from 'is-social'
 export default {
   data() {
     return {
@@ -169,19 +170,30 @@ export default {
     },
   },
   computed: {
-    ownerURL() {
+     ownerURL() {
       if (!!this.owner.twitter_username) {
+        
         return `https://twitter.com/${this.owner.twitter_username}`;
-      } else if (!!this.owner.blog) {
+      } 
+      else if(is.twitter.handle(`@${this.owner.login}`)){
+        return `https://twitter.com/${this.owner.login}`;
+      }
+      else if (!!this.owner.blog) {
         return this.owner.blog;
       }
 
       return this.owner.html_url;
     },
     ownerLabel() {
-      return !!this.owner.twitter_username
-        ? "@" + this.owner.twitter_username
-        : this.owner.login;
+      if (!!this.owner.twitter_username) {
+        
+        return "@" + this.owner.twitter_username;
+      } 
+      else if(is.twitter.handle(`@${this.owner.login}`)){
+        return `@${this.owner.login}`;
+      }
+      
+      return this.owner.login;
     },
   },
 };
