@@ -83,7 +83,6 @@
 </template>
 
 <script>
-import {is} from 'is-social'
 export default {
   data() {
     return {
@@ -175,9 +174,6 @@ export default {
         
         return `https://twitter.com/${this.owner.twitter_username}`;
       } 
-      else if(is.twitter.handle(`@${this.owner.login}`)){
-        return `https://twitter.com/${this.owner.login}`;
-      }
       else if (!!this.owner.blog) {
         return this.owner.blog;
       }
@@ -189,9 +185,6 @@ export default {
         
         return "@" + this.owner.twitter_username;
       } 
-      else if(is.twitter.handle(`@${this.owner.login}`)){
-        return `@${this.owner.login}`;
-      }
       
       return this.owner.login;
     },
