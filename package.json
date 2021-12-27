@@ -1,6 +1,6 @@
 {
-  "name": "github-component",
-  "version": "0.0.0",
+  "name": "raita",
+  "version": "0.2.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
