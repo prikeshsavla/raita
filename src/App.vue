@@ -49,7 +49,6 @@ export default {
         .filter((value) => !!value);
     },
     setTweetView(changeToTweetView){
-      console.log(changeToTweetView);
       this.tweetView = changeToTweetView;
     }
   },

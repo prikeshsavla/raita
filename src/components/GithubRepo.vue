@@ -37,8 +37,12 @@
             class="font-bold underline"
             target="_blank"
             :href="repository.html_url"
-            >{{ repository.name }}</a
           >
+            <template v-if="tweetView">
+              {{ bolder(repository.name) }}
+            </template>
+            <template v-else>{{ repository.name }}</template>
+          </a>
           by
           <a class="underline" target="_blank" :href="ownerURL">{{
             ownerLabel
@@ -52,14 +56,15 @@
           💻: {{ repository.language }}
           <br />
           ⭐ {{ makeNumberString(repository.stargazers_count) }} 👀
-          {{ makeNumberString(repository.subscribers_count) }} 🍴 {{ makeNumberString(repository.forks) }} 🚧
+          {{ makeNumberString(repository.subscribers_count) }} 🍴
+          {{ makeNumberString(repository.forks) }} 🚧
           <a class="underline" target="_blank" :href="url + '/issues'">{{
             makeNumberString(repository.open_issues)
           }}</a>
         </p>
         <p>
           <template v-if="tweetView">
-            #opensource #{{ repository.language }}
+            #opensource #100DaysofCode #{{ repository.language }}
             <br />
             <a
               class="italic underline"
@@ -83,6 +88,72 @@
 </template>
 
 <script>
+
+const chars = {
+  a: "𝗮",
+  b: "𝗯",
+  c: "𝗰",
+  d: "𝗱",
+  e: "𝗲",
+  f: "𝗳",
+  g: "𝗴",
+  h: "𝗵",
+  i: "𝗶",
+  j: "𝗷",
+  k: "𝗸",
+  l: "𝗹",
+  m: "𝗺",
+  n: "𝗻",
+  o: "𝗼",
+  p: "𝗽",
+  q: "𝗾",
+  r: "𝗿",
+  s: "𝘀",
+  t: "𝘁",
+  u: "𝘂",
+  v: "𝘃",
+  w: "𝘄",
+  x: "𝘅",
+  y: "𝘆",
+  z: "𝘇",
+  A: '𝗔',
+  B: '𝗕',
+  C: '𝗖',
+  D: '𝗗',
+  E: '𝗘',
+  F: '𝗙',
+  G: '𝗚',
+  H: '𝗛',
+  I: '𝗜',
+  J: '𝗝',
+  K: '𝗞',
+  L: '𝗟',
+  M: '𝗠',
+  N: '𝗡',
+  O: '𝗢',
+  P: '𝗣',
+  Q: '𝗤',
+  R: '𝗥',
+  S: '𝗦',
+  T: '𝗧',
+  U: '𝗨',
+  V: '𝗩',
+  W: '𝗪',
+  X: '𝗫',
+  Y: '𝗬',
+  Z: '𝗭',
+  0: '𝟬',
+  1: '𝟭',
+  2: '𝟮',
+  3: '𝟯',
+  4: '𝟰',
+  5: '𝟱',
+  6: '𝟲',
+  7: '𝟳',
+  8: '𝟴',
+  9: '𝟵'
+
+};
 export default {
   data() {
     return {
@@ -131,50 +202,50 @@ export default {
     makeNumberString(number) {
       var orig = number;
       var decPlaces = 1;
-    var dec = decPlaces;
-    // 2 decimal places => 100, 3 => 1000, etc
-    decPlaces = Math.pow(10, decPlaces);
+      var dec = decPlaces;
+      // 2 decimal places => 100, 3 => 1000, etc
+      decPlaces = Math.pow(10, decPlaces);
 
-    // Enumerate number abbreviations
-    var abbrev = ["k", "m", "b", "t"];
+      // Enumerate number abbreviations
+      var abbrev = ["k", "m", "b", "t"];
 
-    // Go through the array backwards, so we do the largest first
-    for (var i = abbrev.length - 1; i >= 0; i--) {
-
+      // Go through the array backwards, so we do the largest first
+      for (var i = abbrev.length - 1; i >= 0; i--) {
         // Convert array index to "1000", "1000000", etc
         var size = Math.pow(10, (i + 1) * 3);
 
         // If the number is bigger or equal do the abbreviation
         if (size <= number) {
-            // Here, we multiply by decPlaces, round, and then divide by decPlaces.
-            // This gives us nice rounding to a particular decimal place.
-            var number = Math.round(number * decPlaces / size) / decPlaces;
+          // Here, we multiply by decPlaces, round, and then divide by decPlaces.
+          // This gives us nice rounding to a particular decimal place.
+          var number = Math.round((number * decPlaces) / size) / decPlaces;
 
-            // Handle special case where we round up to the next abbreviation
-            if((number == 1000) && (i < abbrev.length - 1)) {
-                number = 1;
-                i++;
-            }
+          // Handle special case where we round up to the next abbreviation
+          if (number == 1000 && i < abbrev.length - 1) {
+            number = 1;
+            i++;
+          }
 
-            // console.log(number);
-            // Add the letter for the abbreviation
-            number += abbrev[i];
+          // console.log(number);
+          // Add the letter for the abbreviation
+          number += abbrev[i];
 
-            // We are done... stop
-            break;
+          // We are done... stop
+          break;
         }
-    }
+      }
 
-    return number;
+      return number;
     },
+    bolder(text){
+      return text.split("").map((char) => chars[char]).join("");
+    }
   },
   computed: {
-     ownerURL() {
+    ownerURL() {
       if (!!this.owner.twitter_username) {
-        
         return `//twitter.com/${this.owner.twitter_username}`;
-      } 
-      else if (!!this.owner.blog) {
+      } else if (!!this.owner.blog) {
         return this.owner.blog;
       }
 
@@ -182,13 +253,12 @@ export default {
     },
     ownerLabel() {
       if (!!this.owner.twitter_username) {
-        
         return "@" + this.owner.twitter_username;
-      } 
-      
+      }
+
       return this.owner.login;
-    },
-  },
+    }
+  }
 };
 </script>
 
