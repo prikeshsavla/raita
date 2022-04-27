@@ -1,18 +1,7 @@
 <template>
   <div
     v-if="repository && Object.keys(repository).length > 0"
-    class="
-      p-6
-      max-w-lg
-      mx-auto
-      bg-white
-      rounded-xl
-      shadow-md
-      flex
-      items-center
-      space-x-4
-      mb-3
-    "
+    class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4 mb-3"
   >
     <div class="flex-shrink-0">
       <svg
@@ -33,20 +22,12 @@
       <div contenteditable="true" class="max-w-xs" :id="repository.id">
         <template v-if="tweetView"> <br /><br /> </template>
         <h4>
-          <a
-            class="font-bold underline"
-            target="_blank"
-            :href="repository.html_url"
-          >
-            <template v-if="tweetView">
-              {{ bolder(repository.name) }}
-            </template>
-            <template v-else>{{ repository.name }}</template>
-          </a>
+          <template v-if="tweetView">
+            {{ bolder(repository.name) }}
+          </template>
+          <template v-else>{{ repository.name }}</template>
           by
-          <a class="underline" target="_blank" :href="ownerURL">{{
-            ownerLabel
-          }}</a>
+          {{ ownerLabel }}
         </h4>
         <p>
           {{ repository.description }}
@@ -77,9 +58,13 @@
             <a
               class="italic underline"
               target="_blank"
-              :href="repository.homepage"
-              >Read More >>>
-            </a>
+              :href="repository.html_url"
+              >Github</a
+            >
+            &nbsp;|&nbsp;
+            <a class="underline" target="_blank" :href="url + '/issues'"
+              >Contribute</a
+            >
           </template>
         </p>
       </div>
@@ -88,7 +73,6 @@
 </template>
 
 <script>
-
 const chars = {
   a: "𝗮",
   b: "𝗯",
@@ -116,43 +100,42 @@ const chars = {
   x: "𝘅",
   y: "𝘆",
   z: "𝘇",
-  A: '𝗔',
-  B: '𝗕',
-  C: '𝗖',
-  D: '𝗗',
-  E: '𝗘',
-  F: '𝗙',
-  G: '𝗚',
-  H: '𝗛',
-  I: '𝗜',
-  J: '𝗝',
-  K: '𝗞',
-  L: '𝗟',
-  M: '𝗠',
-  N: '𝗡',
-  O: '𝗢',
-  P: '𝗣',
-  Q: '𝗤',
-  R: '𝗥',
-  S: '𝗦',
-  T: '𝗧',
-  U: '𝗨',
-  V: '𝗩',
-  W: '𝗪',
-  X: '𝗫',
-  Y: '𝗬',
-  Z: '𝗭',
-  0: '𝟬',
-  1: '𝟭',
-  2: '𝟮',
-  3: '𝟯',
-  4: '𝟰',
-  5: '𝟱',
-  6: '𝟲',
-  7: '𝟳',
-  8: '𝟴',
-  9: '𝟵'
-
+  A: "𝗔",
+  B: "𝗕",
+  C: "𝗖",
+  D: "𝗗",
+  E: "𝗘",
+  F: "𝗙",
+  G: "𝗚",
+  H: "𝗛",
+  I: "𝗜",
+  J: "𝗝",
+  K: "𝗞",
+  L: "𝗟",
+  M: "𝗠",
+  N: "𝗡",
+  O: "𝗢",
+  P: "𝗣",
+  Q: "𝗤",
+  R: "𝗥",
+  S: "𝗦",
+  T: "𝗧",
+  U: "𝗨",
+  V: "𝗩",
+  W: "𝗪",
+  X: "𝗫",
+  Y: "𝗬",
+  Z: "𝗭",
+  0: "𝟬",
+  1: "𝟭",
+  2: "𝟮",
+  3: "𝟯",
+  4: "𝟰",
+  5: "𝟱",
+  6: "𝟲",
+  7: "𝟳",
+  8: "𝟴",
+  9: "𝟵",
 };
 export default {
   data() {
@@ -237,9 +220,12 @@ export default {
 
       return number;
     },
-    bolder(text){
-      return text.split("").map((char) => chars[char]).join("");
-    }
+    bolder(text) {
+      return text
+        .split("")
+        .map((char) => chars[char])
+        .join("");
+    },
   },
   computed: {
     ownerURL() {
@@ -257,8 +243,8 @@ export default {
       }
 
       return this.owner.login;
-    }
-  }
+    },
+  },
 };
 </script>
 
