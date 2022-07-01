@@ -39,7 +39,7 @@
           ⭐ {{ makeNumberString(repository.stargazers_count) }} 👀
           {{ makeNumberString(repository.subscribers_count) }} 🍴
           {{ makeNumberString(repository.forks) }} 🚧
-          <a class="underline" target="_blank" :href="url + '/issues'">{{
+          <a class="underline" target="_blank" :href="url + issues">{{
             makeNumberString(repository.open_issues)
           }}</a>
         </p>
@@ -63,7 +63,7 @@
             >
             &nbsp;|&nbsp;
             <a class="underline" target="_blank" :href="url + '/issues'"
-              >Contribute</a
+              >Good First Issues</a
             >
           </template>
         </p>
@@ -143,6 +143,7 @@ export default {
       repository: {},
       owner: {},
       social: false,
+      issues: '/issues?q=is%3Aopen+is%3Aissue+label%3A"good+first+issue"',
     };
   },
   props: {
