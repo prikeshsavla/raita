@@ -163,8 +163,9 @@ export default {
   async mounted() {
     const apiURL = this.url.replace(
       "https://github.com/",
-      "https://api.allorigins.win/raw?url=http://api.github.com/repos/"
+      "https://api.allorigins.win/raw?url=https://api.github.com/repos/"
     );
+    // "https://api.allorigins.win/raw?url=https://api.github.com/repos/"
     this.repository = await fetch(apiURL).then((r) => r.json());
 
     const ownerURL = `${this.repository.owner.url}`;
