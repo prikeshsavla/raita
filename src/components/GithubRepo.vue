@@ -166,7 +166,7 @@ export default {
       "https://api.allorigins.win/raw?url=https://api.github.com/repos/"
     );
     // "https://api.allorigins.win/raw?url=https://api.github.com/repos/"
-    this.repository = await fetch(apiURL).then((r) => r.json());
+    this.repository = await fetch(apiURL, { mode: 'no-cors'}).then((r) => r.json());
 
     const ownerURL = `${this.repository.owner.url}`;
     this.owner = await fetch(ownerURL).then((r) => r.json());
